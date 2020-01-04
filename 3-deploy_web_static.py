@@ -67,7 +67,8 @@ def do_deploy(archive_path):
 def deploy():
     """Full deployment"""
 
-    pack = do_pack()
-    if not pack:
+    archive = do_pack()
+    if not archive:
         return False
-    return do_deploy(pack)
+    print("end")
+    return do_deploy(archive)
