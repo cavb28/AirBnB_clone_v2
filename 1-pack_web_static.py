@@ -7,9 +7,10 @@ from fabric.operations import local
 def do_pack():
     """Function to generate version compressed files"""
     local("mkdir -p versions")
-    path = local("tar -zcvf versions/web_static_{}.tgz web_static".format(
-        datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")))
+    file_name = "web_static_{}.tgz".format(
+        datetime.strftime(datetime.now(), "%Y%m%d%H%M%S"))
+    path = local("tar -zcvf versions/{} web_static".format(file_name))
 
     if path.failed:
         return None
-    return path
+    return file_name
