@@ -70,5 +70,4 @@ def deploy():
     archive = do_pack()
     if not archive:
         return False
-    print("end")
     return do_deploy(archive)
