@@ -1,70 +1,62 @@
 #!/usr/bin/python3
-"""
-Distributes an archive to the web servers,
-using the function do_deploy
-"""
+"""Distributes an archive to the web servers."""
 
 from datetime import datetime
 from fabric.operations import local, put, run
 from fabric.api import env
 from os import path
+import ntpath
 
-env.hosts = ['35.243.220.111', '35.190.130.57']
+env.hosts = ['35.227.38.129', '35.227.12.193']
 
 
 def do_pack():
-    """
-    Tars every file in web_static into versions
-    """
+    """Function to generate version compressed files"""
     local("mkdir -p versions")
-    my_path = local("tar -zcvf versions/web_static_{}.tgz web_static".format(
+    path = local("tar -zcvf versions/web_static_{}.tgz web_static".format(
         datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")))
 
-    if my_path.failed:
+    if path.failed:
         return None
     return path
 
 
 def do_deploy(archive_path):
-    """
-    deploy archive
-    :param archive_path:
-    :return:
-    """
+    """deploy archive"""
     if not path.exists(archive_path):
         return False
 
     try:
-        my_name = archive_path[9:]
-        my_name_short = archive_path[9:-4]
+        head, tail = ntpath.split(archive_path)
+        if tail:
+            file = tail
+        else:
+            file = ntpath.basename(head)
 
-        """ Upload the archive to the /tmp/ directory of the web server"""
-        put(archive_path, "/tmp/{}".format(my_name))
+        head, tail = ntpath.splitext(file)
+        if head:
+            name = head
+        else:
+            name = ntpath.basename(head)
 
-        """Uncompress the archive to the folder /data/web_static/releases/<archive
-        filename without extension> on the web server"""
-        run("mkdir -p /data/web_static/releases/{}/".format(my_name_short))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
-            .format(my_name, my_name_short))
-        run("mv /data/web_static/releases/{}/web_static/*\
+        put(archive_path, "/tmp/{}".format(file))
+
+        run("sudo mkdir -p /data/web_static/releases/{}/".format(name))
+        run("sudo tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
+            .format(file, name))
+        print(file)
+        run("sudo mv /data/web_static/releases/{}/web_static/*\
                             /data/web_static/releases/{}/"
-            .format(my_name_short, my_name_short))
+            .format(name, name))
 
-        """Delete the archive from the web server"""
-        run("rm /tmp/{}".format(my_name))
+        run("sudo rm /tmp/{}".format(file))
 
-        """Delete the symbolic link /data/web_static/current
-        from the web server"""
-        run("rm -fr /data/web_static/current")
+        run("sudo rm -rf /data/web_static/current")
 
-        """Create a new the symbolic link /data/web_static/current on the web server,
-        linked to the new version of your code
-        (/data/web_static/releases/<archive filename without extension>)
-        """
-        run("rm -fr /data/web_static/releases/{}/web_static"
-            .format(my_name_short))
-        run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-            .format(my_name_short))
+        run("sudo rm -rf /data/web_static/releases/{}/web_static"
+            .format(name))
+        run("sudo ln -s /data/web_static/releases/{}/ /data/web_static/current"
+            .format(name))
 
         print("New version deployed!")
 
