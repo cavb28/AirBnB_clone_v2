@@ -44,7 +44,7 @@ def do_deploy(archive_path):
         run("sudo mkdir -p /data/web_static/releases/{}/".format(name))
         run("sudo tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
             .format(file, name))
-        print(file)
+
         run("sudo mv /data/web_static/releases/{}/web_static/*\
                             /data/web_static/releases/{}/"
             .format(name, name))
