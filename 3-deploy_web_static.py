@@ -13,12 +13,13 @@ env.hosts = ['35.227.38.129', '35.227.12.193']
 def do_pack():
     """Function to generate version compressed files"""
     local("mkdir -p versions")
-    path = local("tar -zcvf versions/web_static_{}.tgz web_static".format(
-        datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")))
+    file_name = "web_static_{}.tgz".format(
+        datetime.strftime(datetime.now(), "%Y%m%d%H%M%S"))
+    path_file = local("tar -zcvf versions/{} web_static".format(file_name))
 
-    if path.failed:
+    if path_file.failed:
         return None
-    return path
+    return "versions/{}".format(file_name)
 
 
 def do_deploy(archive_path):
@@ -65,9 +66,9 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """Full deployment"""
-
-    archive = do_pack()
-    if not archive:
+    """full deployment"""
+    new_pack = do_pack()
+    if not new_pack:
         return False
-    return do_deploy(archive)
+    else:
+        return do_deploy(new_pack)
