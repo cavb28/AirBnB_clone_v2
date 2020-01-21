@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 import os
 import models
 
+
 class State(BaseModel, Base):
     """This is the class for State
     Attributes:
