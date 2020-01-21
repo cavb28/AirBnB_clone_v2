@@ -5,6 +5,11 @@ from models import storage
 app = Flask(__name__)
 
 
+@app.teardown_appcontext
+def app_context():
+    storage.close()
+
+
 @app.route('/states_list', strict_slashes=False)
 def states_list():
     states = storage.all('State')
