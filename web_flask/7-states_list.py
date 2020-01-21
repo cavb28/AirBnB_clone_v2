@@ -53,11 +53,13 @@ def states_list():
     if os.environ.get("HBNB_TYPE_STORAGE") == "db":
         from models.engine.db_storage import DBStorage
         storage = DBStorage()
-        storage.all(State)
+        states = storage.all(State)
     else:
         from models.engine.file_storage import FileStorage
         storage = FileStorage()
-        storage.all(State)
+        states = storage.all(State)
+    print(states)
+
 
 
 if __name__ == '__main__':
