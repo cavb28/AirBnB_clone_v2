@@ -47,21 +47,14 @@ class DBStorage:
             for table in my_cls:
                 query = self.__session.query(eval(table)).all()
                 for obj in query:
-                    key = "{}.{}".format(type(obj).__name__, obj.id)
-                    # other = (obj.__dict__)
-                    # del other["_sa_instance_state"]
-                    # new = dict(other)
-                    # my_dict[key] = new
+                    key = obj.__class__.__name__ + '.' + obj.id
                     my_dict[key] = obj
-                # print(my_dict)
-            return my_dict
         else:
             query = self.__session.query(eval(cls)).all()
             for obj in query:
-                key = "{}.{}".format(type(obj).__name__, obj.id)
+                key = obj.__class__.__name__ + '.' + obj.id
                 my_dict[key] = obj
-            # print(my_dict)
-                return my_dict
+        return my_dict
 
     def new(self, obj):
         """Method new of dbStorage class"""
@@ -72,9 +65,6 @@ class DBStorage:
     def save(self):
         """Method save of dbStorage class"""
         my_dict = {}
-        # for key, value in self.__dict__.items():
-        # my_dict[key] = value.to_dict()
-        # self.__session.add(my_dict)
         self.__session.commit()
 
     def delete(self, obj=None):
@@ -90,3 +80,6 @@ class DBStorage:
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        self.__session.close()
