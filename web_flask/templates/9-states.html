@@ -5,16 +5,15 @@
     </HEAD>
     <BODY>
         {%if all is defined %}
-        <UL>
          <H1>States</H1>
+         <UL>
             {%for State in all.values() | sort(attribute='name')%}
             <LI>{{State['id']}}: <B>{{State['name']}}</B></LI>
             {% endfor %}
         </UL>
         {%elif element is defined %}
-
-         <H1>States: {{element['name']}}</H1>
-         <H3>Cities:</H3>
+        <H1>States: {{element['name']}}</H1>
+        <H3>Cities:</H3>
          <UL>
                     {%for city in element.cities | sort(attribute='name')%}
                         <LI>{{city.id}}: <B>{{city.name}}</B></LI>
