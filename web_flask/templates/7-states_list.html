@@ -6,9 +6,9 @@
     <BODY>
         <H1>States</H1>
         <UL>
-
-            <LI>{{state_id}}: <B>{{state_name}}</B></LI>
-814
+            {%for State in data.values() | sort(attribute='name')%}
+            <LI>{{State['id']}}: <B>{{State['name']}}</B></LI>
+            {% endfor %}
         </UL>
     </BODY>
 </HTML>
