@@ -43,7 +43,7 @@ class Place(BaseModel, Base):
     # ****************************************
     amenity_ids = []
 
-    if os.environ['HBNB_TYPE_STORAGE'] != 'db':
+    if os.environ.get('HBNB_TYPE_STORAGE') != 'db':
         @property
         def reviews(self):
             """FileStorage relationship between Place and Review """

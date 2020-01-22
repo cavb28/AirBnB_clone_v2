@@ -52,7 +52,7 @@ class DBStorage:
         else:
             query = self.__session.query(eval(cls)).all()
             for obj in query:
-                key = obj.__class__.__name__ + '.' + obj.id
+                key = "{}.{}".format(type(obj).__name__, obj.id)
                 my_dict[key] = obj
         return my_dict
 
@@ -82,4 +82,9 @@ class DBStorage:
         self.__session = Session()
 
     def close(self):
+        """
+        call remove() method on the private session attribute (self.__session)
+        or close() on the class Session
+        :return:
+        """
         self.__session.close()
