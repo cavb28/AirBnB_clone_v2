@@ -75,4 +75,5 @@ button:hover {
 .amenities:hover .popover,
 .locations:hover .popover {
     visibility: visible;
+
 }

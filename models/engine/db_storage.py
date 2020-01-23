@@ -27,7 +27,7 @@ class DBStorage:
     def __init__(self):
         """Instantiation of base model class"""
         self.__engine = create_engine(
-            'mysql+mysqldb://{}:{}@{}/{}'.format(os.getenv("HBNB_MYSQL_USER"),
+            'mysql+mysqldb://{}:{}@{}/{}?charset=utf8'.format(os.getenv("HBNB_MYSQL_USER"),
                                                  os.getenv("HBNB_MYSQL_PWD"),
                                                  os.getenv("HBNB_MYSQL_HOST"),
                                                  os.getenv("HBNB_MYSQL_DB")),
